@@ -36,34 +36,31 @@ public class CinemaTest {
         System.setOut(new PrintStream(outContent));
         cinema.mostraPosti();
         System.setOut(originalOut);
-        String output = outContent.toString();
-        assertTrue(output.contains("O"));
-        assertFalse(output.contains("X"));
+        assertTrue(outContent.toString().contains("O"));
+        assertFalse(outContent.toString().contains("X"));
     }
 
     @Test @DisplayName("Prenotare un posto libero ritorna true")
     void testPrenotaPostoLibero() { assertTrue(cinema.prenotaPosto(0, 0)); }
 
-    @Test @DisplayName("Il posto diventa prenotato dopo la prenotazione")
+    @Test @DisplayName("Il posto diventa prenotato")
     void testPostoDiventaPrenotato() {
         cinema.prenotaPosto(2, 3);
         assertTrue(cinema.isPostoPrenotato(2, 3));
     }
 
-    @Test @DisplayName("Prenotare un posto gia occupato ritorna false")
+    @Test @DisplayName("Prenotare posto gia occupato ritorna false")
     void testPrenotaPostoOccupato() {
         cinema.prenotaPosto(1, 1);
         assertFalse(cinema.prenotaPosto(1, 1));
     }
 
-    @Test @DisplayName("Prenotare con riga negativa ritorna false")
-    void testPrenotaRigaNegativa() { assertFalse(cinema.prenotaPosto(-1, 0)); }
-
-    @Test @DisplayName("Prenotare con colonna fuori limite ritorna false")
-    void testPrenotaColonnaFuoriLimite() { assertFalse(cinema.prenotaPosto(0, 99)); }
-
-    @Test @DisplayName("Prenotare con riga fuori limite ritorna false")
-    void testPrenotaRigaFuoriLimite() { assertFalse(cinema.prenotaPosto(99, 0)); }
+    @Test @DisplayName("Prenotare con indici non validi ritorna false")
+    void testPrenotaIndiciNonValidi() {
+        assertFalse(cinema.prenotaPosto(-1, 0));
+        assertFalse(cinema.prenotaPosto(0, 99));
+        assertFalse(cinema.prenotaPosto(99, 0));
+    }
 
     @Test @DisplayName("Prenotare piu posti diversi funziona")
     void testPrenotaPiuPosti() {
@@ -74,5 +71,38 @@ public class CinemaTest {
         assertTrue(cinema.isPostoPrenotato(1, 1));
         assertTrue(cinema.isPostoPrenotato(4, 5));
         assertFalse(cinema.isPostoPrenotato(2, 2));
+    }
+
+    @Test @DisplayName("Annullare un posto prenotato ritorna true")
+    void testAnnullaPostoPrenotato() {
+        cinema.prenotaPosto(0, 0);
+        assertTrue(cinema.annullaPrenotazione(0, 0));
+    }
+
+    @Test @DisplayName("Il posto diventa libero dopo annullamento")
+    void testPostoDiventaLiberoDopoAnnullamento() {
+        cinema.prenotaPosto(2, 3);
+        cinema.annullaPrenotazione(2, 3);
+        assertFalse(cinema.isPostoPrenotato(2, 3));
+    }
+
+    @Test @DisplayName("Annullare un posto gia libero ritorna false")
+    void testAnnullaPostoGiaLibero() { assertFalse(cinema.annullaPrenotazione(0, 0)); }
+
+    @Test @DisplayName("Annullare con indici non validi ritorna false")
+    void testAnnullaIndiciNonValidi() {
+        assertFalse(cinema.annullaPrenotazione(-1, 0));
+        assertFalse(cinema.annullaPrenotazione(0, 99));
+        assertFalse(cinema.annullaPrenotazione(99, 0));
+    }
+
+    @Test @DisplayName("Ciclo completo: prenota -> annulla -> ri-prenota")
+    void testCicloPrenotaAnnulla() {
+        assertTrue(cinema.prenotaPosto(3, 2));
+        assertTrue(cinema.isPostoPrenotato(3, 2));
+        assertTrue(cinema.annullaPrenotazione(3, 2));
+        assertFalse(cinema.isPostoPrenotato(3, 2));
+        assertTrue(cinema.prenotaPosto(3, 2));
+        assertTrue(cinema.isPostoPrenotato(3, 2));
     }
 }
