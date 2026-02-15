@@ -24,15 +24,12 @@ public class Cinema {
     public void mostraPosti() {
         System.out.println("\n=== Mappa della Sala Cinema ===");
         System.out.println("   Legenda: O = Libero | X = Prenotato\n");
-
         System.out.print("    ");
         for (int j = 0; j < colonne; j++) System.out.printf(" %2d", (j + 1));
         System.out.println();
-
         System.out.print("    ");
         for (int j = 0; j < colonne; j++) System.out.print("---");
         System.out.println();
-
         for (int i = 0; i < righe; i++) {
             System.out.printf(" %2d |", (i + 1));
             for (int j = 0; j < colonne; j++)
@@ -40,6 +37,13 @@ public class Cinema {
             System.out.println();
         }
         System.out.println();
+    }
+
+    public boolean prenotaPosto(int riga, int colonna) {
+        if (!isValidPosition(riga, colonna)) return false;
+        if (posti[riga][colonna]) return false;
+        posti[riga][colonna] = true;
+        return true;
     }
 
     private boolean isValidPosition(int riga, int colonna) {
