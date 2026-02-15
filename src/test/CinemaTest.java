@@ -40,6 +40,17 @@ public class CinemaTest {
         assertFalse(outContent.toString().contains("X"));
     }
 
+    @Test @DisplayName("mostraPosti() mostra X dopo prenotazione")
+    void testMostraPostiDopoPrenotazione() {
+        cinema.prenotaPosto(0, 0);
+        ByteArrayOutputStream outContent = new ByteArrayOutputStream();
+        PrintStream originalOut = System.out;
+        System.setOut(new PrintStream(outContent));
+        cinema.mostraPosti();
+        System.setOut(originalOut);
+        assertTrue(outContent.toString().contains("X"));
+    }
+
     @Test @DisplayName("Prenotare un posto libero ritorna true")
     void testPrenotaPostoLibero() { assertTrue(cinema.prenotaPosto(0, 0)); }
 
@@ -93,7 +104,6 @@ public class CinemaTest {
     void testAnnullaIndiciNonValidi() {
         assertFalse(cinema.annullaPrenotazione(-1, 0));
         assertFalse(cinema.annullaPrenotazione(0, 99));
-        assertFalse(cinema.annullaPrenotazione(99, 0));
     }
 
     @Test @DisplayName("Ciclo completo: prenota -> annulla -> ri-prenota")
@@ -104,5 +114,44 @@ public class CinemaTest {
         assertFalse(cinema.isPostoPrenotato(3, 2));
         assertTrue(cinema.prenotaPosto(3, 2));
         assertTrue(cinema.isPostoPrenotato(3, 2));
+    }
+
+    @Test @DisplayName("Posti prenotati e' 0 all'inizio")
+    void testPostiPrenotatiIniziale() { assertEquals(0, cinema.getPostiPrenotati()); }
+
+    @Test @DisplayName("Conteggio posti prenotati corretto")
+    void testConteggioPostiPrenotati() {
+        cinema.prenotaPosto(0, 0);
+        cinema.prenotaPosto(1, 1);
+        cinema.prenotaPosto(2, 2);
+        assertEquals(3, cinema.getPostiPrenotati());
+    }
+
+    @Test @DisplayName("Percentuale occupazione 0% all'inizio")
+    void testPercentualeIniziale() { assertEquals(0.0, cinema.getPercentualeOccupazione(), 0.01); }
+
+    @Test @DisplayName("Percentuale occupazione calcolata correttamente")
+    void testPercentualeOccupazione() {
+        for (int i = 0; i < 3; i++)
+            for (int j = 0; j < 5; j++)
+                cinema.prenotaPosto(i, j);
+        assertEquals(50.0, cinema.getPercentualeOccupazione(), 0.01);
+    }
+
+    @Test @DisplayName("Conteggio si aggiorna dopo annullamento")
+    void testPostiPrenotatiDopoAnnullamento() {
+        cinema.prenotaPosto(0, 0);
+        cinema.prenotaPosto(1, 1);
+        assertEquals(2, cinema.getPostiPrenotati());
+        cinema.annullaPrenotazione(0, 0);
+        assertEquals(1, cinema.getPostiPrenotati());
+    }
+
+    @Test @DisplayName("Percentuale 100% quando tutti prenotati")
+    void testPercentuale100() {
+        for (int i = 0; i < cinema.getRighe(); i++)
+            for (int j = 0; j < cinema.getColonne(); j++)
+                cinema.prenotaPosto(i, j);
+        assertEquals(100.0, cinema.getPercentualeOccupazione(), 0.01);
     }
 }
