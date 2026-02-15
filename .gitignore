@@ -1,0 +1,24 @@
+# Compilati Java
+*.class
+*.jar
+!lib/*.jar
+
+# Cartelle di build
+out/
+build/
+bin/
+target/
+
+# File degli IDE
+.idea/
+*.iml
+.vscode/
+.settings/
+.project
+.classpath
+*.swp
+*~
+
+# File di sistema
+.DS_Store
+Thumbs.db
