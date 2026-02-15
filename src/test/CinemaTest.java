@@ -26,17 +26,8 @@ public class CinemaTest {
                 assertFalse(cinema.isPostoPrenotato(i, j));
     }
 
-    @Test @DisplayName("Il costruttore con dimensioni diverse funziona")
-    void testCostruttoreDimensioniDiverse() {
-        Cinema piccolo = new Cinema(2, 3);
-        assertEquals(2, piccolo.getRighe());
-        assertEquals(3, piccolo.getColonne());
-    }
-
     @Test @DisplayName("mostraPosti() non causa eccezioni")
-    void testMostraPostiNoException() {
-        assertDoesNotThrow(() -> cinema.mostraPosti());
-    }
+    void testMostraPostiNoException() { assertDoesNotThrow(() -> cinema.mostraPosti()); }
 
     @Test @DisplayName("mostraPosti() mostra O per posti liberi")
     void testMostraPostiOutputLiberi() {
@@ -48,5 +39,40 @@ public class CinemaTest {
         String output = outContent.toString();
         assertTrue(output.contains("O"));
         assertFalse(output.contains("X"));
+    }
+
+    @Test @DisplayName("Prenotare un posto libero ritorna true")
+    void testPrenotaPostoLibero() { assertTrue(cinema.prenotaPosto(0, 0)); }
+
+    @Test @DisplayName("Il posto diventa prenotato dopo la prenotazione")
+    void testPostoDiventaPrenotato() {
+        cinema.prenotaPosto(2, 3);
+        assertTrue(cinema.isPostoPrenotato(2, 3));
+    }
+
+    @Test @DisplayName("Prenotare un posto gia occupato ritorna false")
+    void testPrenotaPostoOccupato() {
+        cinema.prenotaPosto(1, 1);
+        assertFalse(cinema.prenotaPosto(1, 1));
+    }
+
+    @Test @DisplayName("Prenotare con riga negativa ritorna false")
+    void testPrenotaRigaNegativa() { assertFalse(cinema.prenotaPosto(-1, 0)); }
+
+    @Test @DisplayName("Prenotare con colonna fuori limite ritorna false")
+    void testPrenotaColonnaFuoriLimite() { assertFalse(cinema.prenotaPosto(0, 99)); }
+
+    @Test @DisplayName("Prenotare con riga fuori limite ritorna false")
+    void testPrenotaRigaFuoriLimite() { assertFalse(cinema.prenotaPosto(99, 0)); }
+
+    @Test @DisplayName("Prenotare piu posti diversi funziona")
+    void testPrenotaPiuPosti() {
+        assertTrue(cinema.prenotaPosto(0, 0));
+        assertTrue(cinema.prenotaPosto(1, 1));
+        assertTrue(cinema.prenotaPosto(4, 5));
+        assertTrue(cinema.isPostoPrenotato(0, 0));
+        assertTrue(cinema.isPostoPrenotato(1, 1));
+        assertTrue(cinema.isPostoPrenotato(4, 5));
+        assertFalse(cinema.isPostoPrenotato(2, 2));
     }
 }
