@@ -46,6 +46,13 @@ public class Cinema {
         return true;
     }
 
+    public boolean annullaPrenotazione(int riga, int colonna) {
+        if (!isValidPosition(riga, colonna)) return false;
+        if (!posti[riga][colonna]) return false;
+        posti[riga][colonna] = false;
+        return true;
+    }
+
     private boolean isValidPosition(int riga, int colonna) {
         return riga >= 0 && riga < righe && colonna >= 0 && colonna < colonne;
     }
