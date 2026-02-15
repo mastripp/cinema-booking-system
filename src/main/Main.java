@@ -22,7 +22,8 @@ public class Main {
             System.out.println("1. Mostra posti");
             System.out.println("2. Prenota posto");
             System.out.println("3. Annulla prenotazione");
-            System.out.println("4. Esci");
+            System.out.println("4. Statistiche");
+            System.out.println("5. Esci");
             System.out.print("Scelta: ");
 
             int scelta;
@@ -65,12 +66,19 @@ public class Main {
                     }
                     break;
                 case 4:
+                    System.out.println("\n--- Statistiche Sala Cinema ---");
+                    System.out.println("Capacita totale: " + (RIGHE * COLONNE) + " posti");
+                    System.out.println("Posti prenotati: " + cinema.getPostiPrenotati());
+                    System.out.println("Posti liberi:    " + (RIGHE * COLONNE - cinema.getPostiPrenotati()));
+                    System.out.printf("Occupazione:     %.1f%%\n", cinema.getPercentualeOccupazione());
+                    break;
+                case 5:
                     continua = false;
                     System.out.println("\nGrazie per aver usato il sistema di prenotazione!");
                     System.out.println("Buona visione!");
                     break;
                 default:
-                    System.out.println("Scelta non valida. Inserisci un numero da 1 a 4.");
+                    System.out.println("Scelta non valida. Inserisci un numero da 1 a 5.");
                     break;
             }
         }

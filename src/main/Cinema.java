@@ -37,6 +37,9 @@ public class Cinema {
             System.out.println();
         }
         System.out.println();
+        System.out.println("   Posti prenotati: " + getPostiPrenotati() + "/" + (righe * colonne));
+        System.out.printf("   Occupazione: %.1f%%\n", getPercentualeOccupazione());
+        System.out.println();
     }
 
     public boolean prenotaPosto(int riga, int colonna) {
@@ -51,6 +54,20 @@ public class Cinema {
         if (!posti[riga][colonna]) return false;
         posti[riga][colonna] = false;
         return true;
+    }
+
+    public int getPostiPrenotati() {
+        int contatore = 0;
+        for (int i = 0; i < righe; i++)
+            for (int j = 0; j < colonne; j++)
+                if (posti[i][j]) contatore++;
+        return contatore;
+    }
+
+    public double getPercentualeOccupazione() {
+        int totale = righe * colonne;
+        if (totale == 0) return 0.0;
+        return (double) getPostiPrenotati() / totale * 100.0;
     }
 
     private boolean isValidPosition(int riga, int colonna) {
