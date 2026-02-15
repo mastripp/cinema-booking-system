@@ -1,4 +1,5 @@
 import java.util.Scanner;
+import java.util.InputMismatchException;
 
 public class Main {
 
@@ -24,32 +25,66 @@ public class Main {
             System.out.println("4. Esci");
             System.out.print("Scelta: ");
 
-            int scelta = scanner.nextInt();
+            int scelta;
+            try {
+                scelta = scanner.nextInt();
+            } catch (InputMismatchException e) {
+                System.out.println("Errore: inserisci un numero valido!");
+                scanner.nextLine();
+                continue;
+            }
 
             switch (scelta) {
                 case 1: cinema.mostraPosti(); break;
                 case 2:
                     cinema.mostraPosti();
-                    System.out.print("Riga (1-" + RIGHE + "): ");
-                    int rp = scanner.nextInt();
-                    System.out.print("Colonna (1-" + COLONNE + "): ");
-                    int cp = scanner.nextInt();
-                    System.out.println(cinema.prenotaPosto(rp-1, cp-1) ?
-                        "Posto ["+rp+","+cp+"] prenotato!" : "Errore prenotazione!");
+                    System.out.println("--- Prenotazione Posto ---");
+                    int rp = leggiIntero(scanner, "Inserisci riga (1-" + RIGHE + "): ");
+                    if (rp == -1) continue;
+                    int cp = leggiIntero(scanner, "Inserisci colonna (1-" + COLONNE + "): ");
+                    if (cp == -1) continue;
+                    if (cinema.prenotaPosto(rp - 1, cp - 1)) {
+                        System.out.println("Posto [" + rp + ", " + cp + "] prenotato con successo!");
+                    } else {
+                        System.out.println("Impossibile prenotare il posto [" + rp + ", " + cp + "].");
+                        System.out.println("Il posto potrebbe essere gia occupato o le coordinate non valide.");
+                    }
                     break;
                 case 3:
                     cinema.mostraPosti();
-                    System.out.print("Riga (1-" + RIGHE + "): ");
-                    int ra = scanner.nextInt();
-                    System.out.print("Colonna (1-" + COLONNE + "): ");
-                    int ca = scanner.nextInt();
-                    System.out.println(cinema.annullaPrenotazione(ra-1, ca-1) ?
-                        "Prenotazione ["+ra+","+ca+"] annullata!" : "Errore annullamento!");
+                    System.out.println("--- Annullamento Prenotazione ---");
+                    int ra = leggiIntero(scanner, "Inserisci riga (1-" + RIGHE + "): ");
+                    if (ra == -1) continue;
+                    int ca = leggiIntero(scanner, "Inserisci colonna (1-" + COLONNE + "): ");
+                    if (ca == -1) continue;
+                    if (cinema.annullaPrenotazione(ra - 1, ca - 1)) {
+                        System.out.println("Prenotazione [" + ra + ", " + ca + "] annullata con successo!");
+                    } else {
+                        System.out.println("Impossibile annullare il posto [" + ra + ", " + ca + "].");
+                        System.out.println("Il posto potrebbe essere gia libero o le coordinate non valide.");
+                    }
                     break;
-                case 4: continua = false; System.out.println("Buona visione!"); break;
-                default: System.out.println("Scelta non valida!"); break;
+                case 4:
+                    continua = false;
+                    System.out.println("\nGrazie per aver usato il sistema di prenotazione!");
+                    System.out.println("Buona visione!");
+                    break;
+                default:
+                    System.out.println("Scelta non valida. Inserisci un numero da 1 a 4.");
+                    break;
             }
         }
         scanner.close();
+    }
+
+    private static int leggiIntero(Scanner scanner, String prompt) {
+        System.out.print(prompt);
+        try {
+            return scanner.nextInt();
+        } catch (InputMismatchException e) {
+            System.out.println("Errore: inserisci un numero valido!");
+            scanner.nextLine();
+            return -1;
+        }
     }
 }
